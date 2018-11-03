@@ -146,8 +146,18 @@ public final class ActionFunctions {
 
     }
 
+    public static void playThroneRoom(GameState game, Player player){
+
+        String cardName = Text.throneroomText(player);
+        ActionCard card = (ActionCard) player.hand.get(cardName);
+
+        card.play(game, player);
+        card.play(game, player);
+
+    }
 
     
+
 
     public static void main(String[] args){
 

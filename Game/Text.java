@@ -103,6 +103,17 @@ public final class Text {
         return name;
     }
 
+    public static String throneroomText(Player player){
+
+        player.showHand();
+        System.out.println("Which card would you like to play twice?");
+        String name = cardInput.nextLine();
+
+        return name;
+
+    }
+
+
     public static void main(String[] args){
 
     }
