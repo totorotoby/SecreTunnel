@@ -2,7 +2,7 @@ package Game;
 
 import java.util.LinkedList;
 
-public class CardStack<Card> extends LinkedList<Card> {
+public class CardStack extends LinkedList<Card> {
 
     public CardStack(){
         super();

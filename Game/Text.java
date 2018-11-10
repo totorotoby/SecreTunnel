@@ -44,7 +44,7 @@ public final class Text {
 
     }
 
-    public static String workshopText(ArrayList<String> toPrint){
+    public static String workshopartisanText(ArrayList<String> toPrint){
 
         while (toPrint.iterator().hasNext()){
             System.out.println(toPrint.iterator().next() + "\n");
@@ -110,6 +110,58 @@ public final class Text {
         String name = cardInput.nextLine();
 
         return name;
+
+    }
+
+    public static int banditText(ArrayList<Card> toptwo){
+
+        System.out.println("Would you like to discard (1) " + toptwo.get(0).name + " or (2) " + toptwo.get(1));
+        int index = cardInput.nextInt();
+        return index - 1;
+
+    }
+
+    public static String libraryText(Card toAdd){
+
+        System.out.println("Would you like to add " + toAdd.name + " to your Hand? (Yes/No) Otherwise it will be discarded. ");
+        String ans = cardInput.nextLine();
+
+        return ans;
+
+    }
+
+    public static String mineText(ArrayList<Card> canDiscard){
+
+        for (int i = 0 ; i < canDiscard.size() ; i ++){
+
+            System.out.println(canDiscard.get(i).name);
+        }
+
+        System.out.print("Which card would you like to trash?");
+        String name = cardInput.nextLine();
+
+        return name;
+    }
+
+    public static int[] sentryText(ArrayList<Card> toptwo) {
+
+        int[] choices = new int[2];
+
+        int count = 0;
+        for (Card card : toptwo) {
+            System.out.println("Would you like to (1) discard, (2) trash, or (3) leave on top of your deck a" + card.name);
+            choices[count] = cardInput.nextInt();
+            count++;
+        }
+        return choices;
+    }
+
+    public static String artisanText(Player player){
+
+        player.showHand();
+        System.out.println("Which card would you like to put on the top of your deck?");
+        String cardName = cardInput.nextLine();
+        return cardName;
 
     }
 

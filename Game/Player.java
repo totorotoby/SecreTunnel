@@ -3,9 +3,9 @@ import java.util.*;
 
 public class Player {
 
-    protected CardStack<Card> hand;
-    protected CardStack<Card> discard;
-    protected CardStack<Card> deck;
+    protected CardStack hand;
+    protected CardStack discard;
+    protected CardStack deck;
     public int points;
     public String name;
 
@@ -15,9 +15,9 @@ public class Player {
             points = 0;
             this.name = name;
 
-            deck = new CardStack<>();
-            discard = new CardStack<>();
-            hand = new CardStack<>();
+            deck = new CardStack();
+            discard = new CardStack();
+            hand = new CardStack();
 
             for (i = 0 ; i < 7 ; i++) {
                 Card toadd = new TreasureCard("Copper", 0, 1);
@@ -45,7 +45,7 @@ public class Player {
 
             int i;
             for (i = 0 ; i < hand.size() ; i ++){
-                    System.out.println(i + ". " + hand.get(i).getName());
+                    System.out.println(i + ". " + hand.get(i).getName() + "   (" + hand.get(i).getClass().toString() + ")");
             }
     }
 
@@ -73,6 +73,23 @@ public class Player {
         hand.push(deck.pollLast());
     }
 
+    public ArrayList<Card> taketopCard(int num){
+
+        if(deckisEmpty()){
+            redrawDeck();
+        }
+
+        ArrayList<Card> cards = new ArrayList<>();
+
+        for (int i = 0 ; i < num ; i++) {
+            Card card = deck.pollLast();
+            cards.add(card);
+        }
+
+        return cards;
+    }
+
+
     public void drawHand(){
 
             int i;
@@ -90,6 +107,8 @@ public class Player {
             discard.push(hand.remove(discardIndex));
     }
 
+    public void discardCard(Card card){ discard.push(card); }
+
     public void discardDeck(){
             while (!handisEmpty()){
                     discard.push(hand.remove());
@@ -105,5 +124,13 @@ public class Player {
     }
 
     public void trashCard(String name, LinkedList<Card> trash){ trash.push(hand.remove(hand.indexOf(name))); }
+
+    public void trashCard(Card card, LinkedList<Card> trash){ trash.push(card); }
+
+
+    public boolean equals(Player toCompare){
+        if (toCompare.name.equals(this.name)){return true;}
+        return false;
+    }
 
 }

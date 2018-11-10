@@ -1,4 +1,5 @@
 package Game;
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -56,18 +57,19 @@ public final class ActionFunctions {
     public static void playWorkShop(GameState game, Player player){
 
 
-        ArrayList<String> canGain = new ArrayList<>();
-        HashMap actionDecks = game.actiondecks.Decks;
+        ArrayList<String> canGain = game.cardsUpTo(4);
 
-        String[] possibleGain = (String[]) actionDecks.keySet().toArray();
-        for (int i = 0 ; i < possibleGain.length; i++){
-            if (game.actiondecks.isEmpty(possibleGain[i]) && game.actiondecks.Decks.get(possibleGain[i]).get(0).cost <= 4){
-                    canGain.add(possibleGain[i]);
-            }
+        String gainName = Text.workshopartisanText(canGain);
+
+        Card card = game.actiondecks.takeCard(gainName);
+        if (card != null) {
+            player.gainDiscard(card);
+        }
+        else {
+            card = game.basedecks.takeCard(gainName);
+            player.gainDiscard(card);
         }
 
-        String gainName = Text.workshopText(canGain);
-        player.gainDiscard(game.actiondecks.takeCard(gainName));
 
     }
 
@@ -156,8 +158,156 @@ public final class ActionFunctions {
 
     }
 
-    
+    public static void playBandit(GameState game, Player player){
 
+        player.gainDiscard(game.basedecks.takeCard("Gold"));
+
+        ArrayList<Player> others = game.getOtherPlayers(player);
+
+        for (Player oPlayer : others){
+
+            ArrayList<Card> toptwo = oPlayer.taketopCard(2);
+            for (Card card : toptwo){
+                int count = 0;
+                if (!(card instanceof TreasureCard) && !card.name.equals("Copper")){
+                    System.out.println("You have been forced to discard a" + card.name + "from the top of your deck by " + player.name + "'s Bandit\n");
+                    oPlayer.discardCard(toptwo.remove(count));
+                    count++;
+                }
+
+                if (toptwo.size() == 1 ){
+                    System.out.println("You have been forced to trash a" + toptwo.get(0).name + "from the top of your deck by " + player.name + "'s Bandit\n");
+                    game.trash.add(toptwo.remove(0));
+                }
+
+                if (toptwo.size() == 2 ){
+                    int index = Text.banditText(toptwo);
+                    System.out.println("You have trashed" + toptwo.get(index));
+                    game.trash.add(toptwo.remove(index));
+                    System.out.println("You discarded " + toptwo.get(0).name);
+                    oPlayer.discardCard(toptwo.remove(0));
+
+                }
+
+            }
+        }
+    }
+
+    public static void playCouncilRoom(GameState game, Player player){
+
+        ArrayList<Player> others = game.getOtherPlayers(player);
+
+        for (Player oPlayer : others){
+            oPlayer.drawCard();
+        }
+
+    }
+
+    public static void playLibrary(GameState game, Player player){
+
+        while(player.hand.size() < 8){
+
+            Card todraw = player.taketopCard(1).get(0);
+
+            if (todraw instanceof ActionCard){
+
+                String ans = Text.libraryText(todraw);
+
+                if (ans.equals("Yes")){ player.hand.add(todraw); }
+                else{ player.discardCard(todraw); }
+
+            }
+
+            else{
+                player.hand.add(todraw);
+                System.out.println("You added " + todraw.name + " to your hand. \n");
+            }
+        }
+    }
+
+
+    public static void playMine(GameState game, Player player){
+
+        ArrayList<Card> canDiscard = new ArrayList<>();
+
+        for (Card card : player.hand) {
+            if (card instanceof TreasureCard) {
+                canDiscard.add(card);
+            }
+        }
+
+        if (canDiscard.size() > 0) {
+
+            String toDiscard = Text.mineText(canDiscard);
+
+            player.discardCard(player.hand.get(toDiscard));
+
+            if (toDiscard.equals("Copper")) {
+                player.hand.add(game.basedecks.takeCard("Silver"));
+            }
+
+            if (toDiscard.equals("Silver")) {
+                player.hand.add(game.basedecks.takeCard("Gold"));
+            }
+
+        }
+
+    }
+
+    public static void playSentry(GameState game, Player player){
+
+        ArrayList<Card> toptwo = player.taketopCard(2);
+
+        int[] choices = Text.sentryText(toptwo);
+
+        int c = 0;
+
+        for (int option : choices){
+
+            if (option == 1){
+                player.discardCard(toptwo.remove(c));
+            }
+            if (option == 2){
+                player.trashCard(toptwo.remove(c), game.trash);
+            }
+            if (option == 3){
+                player.deck.addLast(toptwo.remove(c));
+            }
+            c++;
+        }
+    }
+
+    public static void playWitch(GameState game, Player player){
+
+        ArrayList<Player> oPlayers = game.getOtherPlayers(player);
+
+        for (Player oPlayer : oPlayers){
+            System.out.println(oPlayer.name + " has gained a curse \n");
+            oPlayer.gainDiscard(game.basedecks.takeCard("Curse"));
+        }
+    }
+
+    public static void playArtisan(GameState game, Player player){
+
+        ArrayList<String> names = game.cardsUpTo(5);
+
+        String toGain = Text.workshopartisanText(names);
+
+        Card card = game.actiondecks.takeCard(toGain);
+
+        if (card != null) {
+            player.hand.addLast(card);
+        }
+        else{
+            card = game.basedecks.takeCard(toGain);
+            player.hand.addLast(card);
+        }
+
+        String cardName = Text.artisanText(player);
+
+        player.gaintopDeck(player.hand.get(cardName));
+
+    }
 
     public static void main(String[] args){
 

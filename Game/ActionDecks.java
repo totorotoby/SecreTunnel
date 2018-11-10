@@ -21,7 +21,10 @@ public class ActionDecks {
 
         if (!isEmpty(name)) {
             ArrayList<Card> pile = Decks.get(name);
-            return (ActionCard) pile.remove(pile.size());
+            if (pile != null) {
+                return (ActionCard) pile.remove(pile.size());
+            }
+            return null;
         }
         return null;
     }
