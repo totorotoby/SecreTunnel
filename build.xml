@@ -1,0 +1,37 @@
+<project name="SecreTunnel">
+
+  <target name="clean">
+      <delete dir="build"/>
+  </target>
+
+  <target name="compileGame">
+    <mkdir dir="build/Game/classes"/>
+    <javac srcdir="src/Game" destdir="build/Game/classes"/>
+  </target>
+
+  
+  <target name="jar">
+    <mkdir dir="build/Game/jar"/>
+    <jar destfile="build/Game/jar/Game.jar" basedir="build/Game/classes">
+      <manifest>
+	<attribute name="Main-Class" value="Game.ActionCard"/>
+      </manifest>
+    </jar>
+  </target>
+  
+  <target name="runG">
+    <java jar="build/Game/jar/Game.jar" fork="true"/>
+  </target>
+
+  <target name="runGame">
+    <antcall target="clean"/>
+    <antcall target="compileGame"/>
+    <antcall target="jar"/>
+    <antcall target="runG"/>
+  </target>
+
+
+
+
+</project>
+ 

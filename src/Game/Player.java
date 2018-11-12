@@ -26,7 +26,8 @@ public class Player {
             for (i = 0 ; i < 3 ; i++){
                     this.deck.add(new VictoryCard("Estate", 2, 1));
             }
-            //TODO needs to be shuffled                                                                                                                                     
+
+            Collections.shuffle(this.deck);
 
     }
 
@@ -59,10 +60,10 @@ public class Player {
 
     public void redrawDeck(){
 
-            //TODO add shuffle of discard                                                                                                                                   
             while (!discardisEmpty()){
                     deck.push(discard.pollLast());
             }
+            Collections.shuffle(this.deck);
     }
     
     public void drawCard(){

@@ -27,9 +27,9 @@ public class ActionCard extends Card {
     public static void main (String[] args){
 
         // TODO How does this work?
-        ActionFunctions manyfuncs = new ActionFunctions();
         String[] playernames = {"Toby", "Grace"};
         ActionCard test = new ActionCard("test", 3, (game, player) -> ActionFunctions.playCellar(game, player));
+
 
     }
 }
